@@ -1,5 +1,5 @@
 export interface Moment {
-  id: number;
+  id: string | number;
   url: string;
   title: string;
   caption: string;

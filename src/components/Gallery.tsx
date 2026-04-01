@@ -116,6 +116,14 @@ export default function Gallery() {
 
       <footer className="max-w-6xl mx-auto mt-32 pt-12 border-t border-brand-gold/10 text-center pb-12">
         <p className="text-brand-gold/40 text-[10px] uppercase tracking-[0.3em]">Feito com amor para você</p>
+        <div className="mt-8">
+          <button 
+            onClick={() => navigate('/admin')}
+            className="text-[9px] uppercase tracking-[0.4em] text-gray-800 hover:text-brand-gold transition-colors"
+          >
+            Admin
+          </button>
+        </div>
       </footer>
     </div>
   );

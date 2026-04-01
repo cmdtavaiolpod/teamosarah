@@ -103,6 +103,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black selection:bg-purple-500/30 relative overflow-x-hidden text-white">
       
+      {/* Floating Confetti Button */}
+      <button
+        onClick={triggerConfetti}
+        className="fixed bottom-8 right-8 z-50 group flex items-center justify-center w-16 h-16 bg-purple-300 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95"
+      >
+        <span className="text-3xl">🎉</span>
+        <div className="absolute inset-0 rounded-full border-2 border-purple-300 animate-ping opacity-20" />
+      </button>
+
       {/* Hero Section */}
       <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
         <div className="relative z-10 space-y-8">
@@ -128,14 +137,6 @@ export default function Home() {
             transition={{ delay: 1 }}
             className="flex flex-col items-center gap-6"
           >
-            <button
-              onClick={triggerConfetti}
-              className="group relative flex items-center justify-center w-24 h-24 bg-purple-300 rounded-full shadow-xl hover:scale-110 transition-transform active:scale-95"
-            >
-              <span className="text-4xl">🎉</span>
-              <div className="absolute inset-0 rounded-full border-2 border-purple-300 animate-ping opacity-20" />
-            </button>
-
             <div className="flex items-center gap-4 w-full max-w-[200px]">
               <div className="h-px flex-1 bg-purple-300/20" />
               <Heart className="w-4 h-4 fill-purple-300 text-purple-300" />
@@ -247,6 +248,14 @@ export default function Home() {
           <p className="text-[11px] uppercase tracking-[0.3em] text-gray-400 mt-6 max-w-xs mx-auto leading-loose">
             Que este novo ciclo seja repleto de luz, amor e muitas alegrias. Você merece o mundo!
           </p>
+          <div className="mt-12">
+            <button 
+              onClick={() => navigate('/admin')}
+              className="text-[9px] uppercase tracking-[0.4em] text-gray-600 hover:text-brand-gold transition-colors"
+            >
+              Admin
+            </button>
+          </div>
         </footer>
       </main>
     </div>
