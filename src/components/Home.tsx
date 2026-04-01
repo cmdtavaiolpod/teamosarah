@@ -5,13 +5,7 @@ import confetti from 'canvas-confetti';
 import SpecialMessage from './SpecialMessage';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-
-interface Moment {
-  id: number;
-  url: string;
-  title: string;
-  caption: string;
-}
+import { Moment } from '../types';
 
 export default function Home() {
   const [moments, setMoments] = useState<Moment[]>([]);
@@ -57,7 +51,8 @@ export default function Home() {
     const { data, error } = await supabase
       .from('moments')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(8);
 
     if (error) {
       console.error('Error fetching moments:', error);
@@ -206,6 +201,10 @@ export default function Home() {
                     alt={moment.title || `Moment ${index + 1}`} 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
                     referrerPolicy="no-referrer" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800';
+                    }}
                   />
                 </div>
               ))
@@ -213,16 +212,16 @@ export default function Home() {
               // Fallback static images if no moments in Supabase
               <>
                 <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800" alt="Moment 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800" alt="Moment 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
                 </div>
                 <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
-                  <img src="https://images.unsplash.com/photo-1516589174184-c685266e4871?auto=format&fit=crop&q=80&w=2000" alt="Moment 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <img src="https://images.unsplash.com/photo-1516589174184-c685266e4871?auto=format&fit=crop&q=80&w=2000" alt="Moment 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
                 </div>
                 <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=800" alt="Moment 3" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=800" alt="Moment 3" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
                 </div>
                 <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
-                  <img src="https://images.unsplash.com/photo-1516970739312-08b075784b71?auto=format&fit=crop&q=80&w=800" alt="Moment 4" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <img src="https://images.unsplash.com/photo-1516970739312-08b075784b71?auto=format&fit=crop&q=80&w=800" alt="Moment 4" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
                 </div>
               </>
             )}

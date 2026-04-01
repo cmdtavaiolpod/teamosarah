@@ -2,13 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Heart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-
-interface Moment {
-  id: number;
-  url: string;
-  title: string;
-  caption: string;
-}
+import { Moment } from '../types';
 
 export default function Gallery() {
   const [moments, setMoments] = useState<Moment[]>([]);
@@ -86,6 +80,10 @@ export default function Gallery() {
                   alt={moment.title} 
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
                   <h3 className="serif text-2xl mb-2">{moment.title}</h3>
