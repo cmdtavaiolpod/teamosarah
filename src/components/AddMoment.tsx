@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { motion } from 'motion/react';
 import { Camera, ArrowLeft, Send } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const AddMoment: React.FC = () => {
   const [url, setUrl] = useState('');
@@ -9,6 +10,7 @@ export const AddMoment: React.FC = () => {
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +54,7 @@ export const AddMoment: React.FC = () => {
         className="w-full max-w-md space-y-8 bg-zinc-900/50 p-8 rounded-[2rem] border border-brand-gold/20 backdrop-blur-xl"
       >
         <div className="flex items-center justify-between">
-          <button onClick={() => window.location.href = '/'} className="text-brand-gold hover:text-white transition-colors">
+          <button onClick={() => navigate('/')} className="text-brand-gold hover:text-white transition-colors">
             <ArrowLeft className="w-6 h-6" />
           </button>
           <Camera className="w-8 h-8 text-brand-gold" />

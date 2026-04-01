@@ -3,10 +3,12 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Heart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Moment } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 export default function Gallery() {
   const [moments, setMoments] = useState<Moment[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMoments();
@@ -37,7 +39,7 @@ export default function Gallery() {
     <div className="min-h-screen bg-black selection:bg-brand-gold/30 p-6 md:p-12 text-white">
       <header className="max-w-6xl mx-auto flex items-center justify-between mb-24">
         <button 
-          onClick={() => window.location.href = '/'} 
+          onClick={() => navigate('/')} 
           className="flex items-center gap-3 text-brand-gold hover:text-white transition-colors group"
         >
           <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
@@ -103,7 +105,7 @@ export default function Gallery() {
             </div>
             <p className="text-brand-gold/60 text-sm italic">Nenhuma memória adicionada ainda.</p>
             <button 
-              onClick={() => window.location.href = '/adicionar'}
+              onClick={() => navigate('/adicionar')}
               className="px-8 py-3 rounded-full bg-brand-gold text-black text-[10px] uppercase tracking-widest hover:bg-black hover:text-white transition-all"
             >
               Adicionar Primeiro Momento
