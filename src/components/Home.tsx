@@ -1,17 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Music, Camera, Heart, Share2, Cake } from 'lucide-react';
+import { Music, Camera, Heart, Share2, Cake, Play, Pause } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SpecialMessage from './SpecialMessage';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Moment } from '../types';
+import EnvelopeOverlay from './EnvelopeOverlay';
 
 export default function Home() {
   const [moments, setMoments] = useState<Moment[]>([]);
+  const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchMoments();
+  }, []);
+
+  useEffect(() => {
+    if (!isEnvelopeOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isEnvelopeOpen]);
+
+  const handleReveal = () => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+      audioRef.current.play().catch(e => console.log("Audio play blocked:", e));
+    }
+  };
+
+  const handleOpenEnvelope = () => {
+    setIsEnvelopeOpen(true);
+    
     // Initial sound
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
     audio.play().catch(e => console.log("Audio play blocked:", e));
@@ -41,9 +69,17 @@ export default function Home() {
       }
     };
     frame();
+  };
 
-    fetchMoments();
-  }, []);
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    }
+  };
 
   const fetchMoments = async () => {
     if (!supabase) return;
@@ -102,6 +138,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black selection:bg-purple-500/30 relative overflow-x-hidden text-white">
+      <audio
+        ref={audioRef}
+        src="https://assets.mixkit.co/music/preview/mixkit-romantic-acoustic-guitar-and-piano-606.mp3"
+        loop
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+      <EnvelopeOverlay isOpen={isEnvelopeOpen} onOpen={handleOpenEnvelope} onReveal={handleReveal} />
       
       {/* Floating Confetti Button */}
       <button
@@ -162,17 +206,24 @@ export default function Home() {
             <h2 className="serif text-4xl mb-3">Trilha Sonora</h2>
             <p className="text-brand-gold text-xs uppercase tracking-[0.3em]">Uma música para celebrar</p>
           </div>
-          <div className="max-w-2xl mx-auto">
-            <iframe 
-              style={{ borderRadius: '12px' }} 
-              src="https://open.spotify.com/embed/track/019PSXsnDgBOdwVc3nC3E8?utm_source=generator&theme=0" 
-              width="100%" 
-              height="352" 
-              frameBorder="0" 
-              allowFullScreen 
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-              loading="lazy"
-            ></iframe>
+          <div className="max-w-md mx-auto bg-zinc-900/80 border border-purple-500/20 p-6 rounded-3xl flex items-center gap-6 shadow-xl">
+            <button
+              onClick={togglePlay}
+              className="w-14 h-14 shrink-0 bg-purple-500 rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform shadow-lg shadow-purple-500/20"
+            >
+              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+            </button>
+            <div className="flex-1">
+              <h3 className="text-purple-200 font-medium text-lg">Nossa Música</h3>
+              <p className="text-purple-300/60 text-sm">Acoustic Romance</p>
+            </div>
+            {isPlaying && (
+              <div className="flex gap-1.5 items-end h-8">
+                <motion.div animate={{ height: ["20%", "80%", "20%"] }} transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }} className="w-1.5 bg-purple-400 rounded-full" />
+                <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }} className="w-1.5 bg-purple-400 rounded-full" />
+                <motion.div animate={{ height: ["30%", "70%", "30%"] }} transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }} className="w-1.5 bg-purple-400 rounded-full" />
+              </div>
+            )}
           </div>
         </section>
 
