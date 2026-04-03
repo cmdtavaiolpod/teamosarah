@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Music, Camera, Heart, Share2, Cake } from 'lucide-react';
+import { Music, Camera, Heart, Share2, Cake, Settings } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SpecialMessage from './SpecialMessage';
 import { supabase } from '../lib/supabase';
@@ -266,12 +266,13 @@ export default function Home() {
           <p className="text-[11px] uppercase tracking-[0.3em] text-gray-400 mt-6 max-w-xs mx-auto leading-loose">
             Que este novo ciclo seja repleto de luz, amor e muitas alegrias. Você merece o mundo!
           </p>
-          <div className="mt-12">
+          <div className="mt-12 pb-8 flex justify-center">
             <button 
               onClick={() => navigate('/admin')}
-              className="text-[9px] uppercase tracking-[0.4em] text-gray-600 hover:text-brand-gold transition-colors"
+              className="text-gray-600 hover:text-brand-gold transition-all duration-300 p-3 rounded-full hover:bg-brand-gold/10"
+              title="Painel de Administração"
             >
-              Admin
+              <Settings className="w-4 h-4 opacity-50 hover:opacity-100 transition-opacity" />
             </button>
           </div>
         </footer>
