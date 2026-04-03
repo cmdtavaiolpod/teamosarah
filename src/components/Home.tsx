@@ -173,9 +173,11 @@ export default function Home() {
       </header>
 
       <main className="max-w-5xl mx-auto px-6 pb-24 space-y-32 relative z-10">
-        <SpecialMessage />
+        <div id="mensagem">
+          <SpecialMessage />
+        </div>
 
-        <section className="space-y-12">
+        <section id="trilha-sonora" className="space-y-12">
           <div className="text-center">
             <h2 className="serif text-4xl mb-3">Trilha Sonora</h2>
             <p className="text-brand-gold text-xs uppercase tracking-[0.3em]">Uma música para celebrar</p>
@@ -194,7 +196,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="space-y-12">
+        <section id="galeria" className="space-y-12">
           <div className="text-center">
             <h2 className="serif text-4xl mb-3">Galeria</h2>
             <p className="text-brand-gold text-xs uppercase tracking-[0.3em]">Momentos especiais capturados</p>
@@ -258,9 +260,27 @@ export default function Home() {
 
         <footer className="text-center pt-32 border-t border-brand-gold/10">
           <div className="flex justify-center gap-8 mb-10">
-            <Music className="w-6 h-6 text-brand-gold/40" />
-            <Camera className="w-6 h-6 text-brand-gold/40" />
-            <Heart className="w-6 h-6 text-brand-gold/40" />
+            <button 
+              onClick={() => document.getElementById('trilha-sonora')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hover:scale-110 transition-transform"
+              title="Ir para Trilha Sonora"
+            >
+              <Music className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+            </button>
+            <button 
+              onClick={() => document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hover:scale-110 transition-transform"
+              title="Ir para Galeria"
+            >
+              <Camera className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+            </button>
+            <button 
+              onClick={() => document.getElementById('mensagem')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hover:scale-110 transition-transform"
+              title="Ir para Mensagem"
+            >
+              <Heart className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+            </button>
           </div>
           <h2 className="serif text-4xl text-brand-gold mb-4">Parabéns, Sarah!</h2>
           <p className="text-[11px] uppercase tracking-[0.3em] text-gray-400 mt-6 max-w-xs mx-auto leading-loose">

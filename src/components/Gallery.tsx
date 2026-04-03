@@ -114,7 +114,7 @@ export default function Gallery() {
         )}
       </main>
 
-      <footer className="max-w-6xl mx-auto mt-32 pt-12 border-t border-brand-gold/10 text-center pb-12">
+      <footer className="max-w-6xl mx-auto mt-32 pt-12 border-t border-brand-gold/10 text-center pb-32">
         <p className="text-brand-gold/40 text-[10px] uppercase tracking-[0.3em]">Feito com amor para você</p>
         <div className="mt-8">
           <button 
@@ -125,6 +125,20 @@ export default function Gallery() {
           </button>
         </div>
       </footer>
+
+      {/* Floating Spotify Player */}
+      <div className="fixed bottom-6 right-6 z-50 w-[300px] md:w-[350px] shadow-2xl rounded-xl overflow-hidden border border-brand-gold/20 bg-black/80 backdrop-blur-xl">
+        <iframe 
+          style={{ borderRadius: '12px' }} 
+          src="https://open.spotify.com/embed/track/3ydmNkAyYq0AKtG8sTfE9P?utm_source=generator&theme=0" 
+          width="100%" 
+          height="80" 
+          frameBorder="0" 
+          allowFullScreen 
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+          loading="lazy"
+        ></iframe>
+      </div>
     </div>
   );
 }
