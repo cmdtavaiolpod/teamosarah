@@ -4,10 +4,15 @@ import { ArrowLeft, Heart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Moment } from '../types';
 import { useNavigate } from 'react-router-dom';
+import { StoryCarousel } from './StoryCarousel';
+import { SpotifyPlayer } from './SpotifyPlayer';
 
 export default function Gallery() {
   const [moments, setMoments] = useState<Moment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
+  const [direction, setDirection] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +38,29 @@ export default function Gallery() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openCarousel = (index: number) => {
+    setIsPreparing(true);
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      setIsPreparing(false);
+      setSelectedIndex(index);
+    }, 800);
+  };
+
+  const closeCarousel = () => {
+    setSelectedIndex(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const paginate = (newDirection: number) => {
+    if (selectedIndex === null) return;
+    setDirection(newDirection);
+    let newIndex = selectedIndex + newDirection;
+    if (newIndex < 0) newIndex = moments.length - 1;
+    if (newIndex >= moments.length) newIndex = 0;
+    setSelectedIndex(newIndex);
   };
 
   return (
@@ -69,13 +97,14 @@ export default function Gallery() {
           </div>
         ) : moments.length > 0 ? (
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-            {moments.map((moment) => (
+            {moments.map((moment, index) => (
               <motion.div
                 key={moment.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="break-inside-avoid group relative rounded-3xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-500"
+                onClick={() => openCarousel(index)}
+                className="break-inside-avoid group relative rounded-3xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
               >
                 <img 
                   src={moment.url} 
@@ -126,19 +155,16 @@ export default function Gallery() {
         </div>
       </footer>
 
-      {/* Floating Spotify Player */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[350px] shadow-2xl rounded-xl overflow-hidden border border-brand-gold/20 bg-black/80 backdrop-blur-xl">
-        <iframe 
-          style={{ borderRadius: '12px' }} 
-          src="https://open.spotify.com/embed/track/3ydmNkAyYq0AKtG8sTfE9P?utm_source=generator&theme=0" 
-          width="100%" 
-          height="80" 
-          frameBorder="0" 
-          allowFullScreen 
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-          loading="lazy"
-        ></iframe>
-      </div>
+      <SpotifyPlayer />
+
+      <StoryCarousel 
+        moments={moments}
+        selectedIndex={selectedIndex}
+        isPreparing={isPreparing}
+        direction={direction}
+        onClose={closeCarousel}
+        onPaginate={paginate}
+      />
     </div>
   );
 }

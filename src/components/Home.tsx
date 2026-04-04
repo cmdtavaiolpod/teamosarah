@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Music, Camera, Heart, Share2, Cake, Settings } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SpecialMessage from './SpecialMessage';
@@ -11,6 +11,7 @@ import EnvelopeOverlay from './EnvelopeOverlay';
 export default function Home() {
   const [moments, setMoments] = useState<Moment[]>([]);
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'mensagem' | 'trilha-sonora' | 'galeria'>('mensagem');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -172,124 +173,180 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pb-24 space-y-32 relative z-10">
-        <div id="mensagem">
-          <SpecialMessage />
+      <main className="max-w-5xl mx-auto px-6 pb-24 relative z-10" id="conteudo-principal">
+        {/* Tab Navigation */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-16 border-b border-purple-300/20 pb-6">
+          <button 
+            onClick={() => setActiveTab('mensagem')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full transition-all duration-300 ${activeTab === 'mensagem' ? 'bg-purple-300/20 text-purple-300 shadow-[0_0_15px_rgba(216,180,254,0.2)]' : 'text-gray-400 hover:text-purple-300 hover:bg-purple-300/5'}`}
+          >
+            <Heart className={`w-4 h-4 ${activeTab === 'mensagem' ? 'fill-purple-300' : ''}`} />
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-medium">Mensagem</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('trilha-sonora')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full transition-all duration-300 ${activeTab === 'trilha-sonora' ? 'bg-purple-300/20 text-purple-300 shadow-[0_0_15px_rgba(216,180,254,0.2)]' : 'text-gray-400 hover:text-purple-300 hover:bg-purple-300/5'}`}
+          >
+            <Music className={`w-4 h-4 ${activeTab === 'trilha-sonora' ? 'fill-purple-300' : ''}`} />
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-medium">Música</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('galeria')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full transition-all duration-300 ${activeTab === 'galeria' ? 'bg-purple-300/20 text-purple-300 shadow-[0_0_15px_rgba(216,180,254,0.2)]' : 'text-gray-400 hover:text-purple-300 hover:bg-purple-300/5'}`}
+          >
+            <Camera className={`w-4 h-4 ${activeTab === 'galeria' ? 'fill-purple-300' : ''}`} />
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-medium">Galeria</span>
+          </button>
         </div>
 
-        <section id="trilha-sonora" className="space-y-12">
-          <div className="text-center">
-            <h2 className="serif text-4xl mb-3">Trilha Sonora</h2>
-            <p className="text-brand-gold text-xs uppercase tracking-[0.3em]">Uma música para celebrar</p>
-          </div>
-          <div className="max-w-2xl mx-auto">
-            <iframe 
-              style={{ borderRadius: '12px' }} 
-              src="https://open.spotify.com/embed/track/019PSXsnDgBOdwVc3nC3E8?utm_source=generator&theme=0" 
-              width="100%" 
-              height="352" 
-              frameBorder="0" 
-              allowFullScreen 
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-              loading="lazy"
-            ></iframe>
-          </div>
-        </section>
-
-        <section id="galeria" className="space-y-12">
-          <div className="text-center">
-            <h2 className="serif text-4xl mb-3">Galeria</h2>
-            <p className="text-brand-gold text-xs uppercase tracking-[0.3em]">Momentos especiais capturados</p>
-          </div>
-
-          {!supabase && (
-            <div className="bg-brand-wine/20 border border-brand-wine/30 p-6 rounded-3xl text-center max-w-2xl mx-auto">
-              <p className="text-brand-gold text-sm">
-                As configurações do banco de dados estão faltando. Por favor, configure as variáveis de ambiente no menu Settings.
-              </p>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {moments.length > 0 ? (
-              moments.slice(0, 8).map((moment, index) => (
-                <div 
-                  key={moment.id} 
-                  className={`aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg ${index % 2 !== 0 ? 'translate-y-8' : ''}`}
-                >
-                  <img 
-                    src={moment.url} 
-                    alt={moment.title || `Moment ${index + 1}`} 
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
-                    referrerPolicy="no-referrer" 
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800';
-                    }}
-                  />
-                </div>
-              ))
-            ) : (
-              // Fallback static images if no moments in Supabase
-              <>
-                <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800" alt="Moment 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
-                </div>
-                <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
-                  <img src="https://images.unsplash.com/photo-1516589174184-c685266e4871?auto=format&fit=crop&q=80&w=2000" alt="Moment 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
-                </div>
-                <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=800" alt="Moment 3" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
-                </div>
-                <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
-                  <img src="https://images.unsplash.com/photo-1516970739312-08b075784b71?auto=format&fit=crop&q=80&w=800" alt="Moment 4" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
-                </div>
-              </>
+        {/* Tab Content */}
+        <div className="min-h-[60vh]">
+          <AnimatePresence mode="wait">
+            {activeTab === 'mensagem' && (
+              <motion.div
+                key="mensagem"
+                initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <SpecialMessage />
+              </motion.div>
             )}
-          </div>
 
-          <div className="flex justify-center pt-12">
-            <button 
-              onClick={() => navigate('/galeria')}
-              className="px-8 py-3 rounded-full border border-brand-gold text-brand-gold text-[10px] uppercase tracking-[0.3em] hover:bg-brand-gold hover:text-black transition-all duration-300"
-            >
-              Ver Tudo
-            </button>
-          </div>
-        </section>
+            {activeTab === 'trilha-sonora' && (
+              <motion.section
+                key="trilha-sonora"
+                initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="space-y-12"
+              >
+                <div className="text-center">
+                  <h2 className="serif text-4xl mb-3 text-purple-300">Trilha Sonora</h2>
+                  <p className="text-purple-300/60 text-xs uppercase tracking-[0.3em]">Uma música para celebrar</p>
+                </div>
+                <div className="max-w-2xl mx-auto">
+                  <iframe 
+                    style={{ borderRadius: '12px' }} 
+                    src="https://open.spotify.com/embed/track/019PSXsnDgBOdwVc3nC3E8?utm_source=generator&theme=0" 
+                    width="100%" 
+                    height="352" 
+                    frameBorder="0" 
+                    allowFullScreen 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </motion.section>
+            )}
 
-        <footer className="text-center pt-32 border-t border-brand-gold/10">
+            {activeTab === 'galeria' && (
+              <motion.section
+                key="galeria"
+                initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="space-y-12"
+              >
+                <div className="text-center">
+                  <h2 className="serif text-4xl mb-3 text-purple-300">Galeria</h2>
+                  <p className="text-purple-300/60 text-xs uppercase tracking-[0.3em]">Momentos especiais capturados</p>
+                </div>
+
+                {!supabase && (
+                  <div className="bg-purple-500/10 border border-purple-500/20 p-6 rounded-3xl text-center max-w-2xl mx-auto">
+                    <p className="text-purple-300 text-sm">
+                      As configurações do banco de dados estão faltando. Por favor, configure as variáveis de ambiente no menu Settings.
+                    </p>
+                  </div>
+                )}
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {moments.length > 0 ? (
+                    moments.slice(0, 8).map((moment, index) => (
+                      <div 
+                        key={moment.id} 
+                        className={`aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg ${index % 2 !== 0 ? 'translate-y-8' : ''}`}
+                      >
+                        <img 
+                          src={moment.url} 
+                          alt={moment.title || `Moment ${index + 1}`} 
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
+                          referrerPolicy="no-referrer" 
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800';
+                          }}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    // Fallback static images if no moments in Supabase
+                    <>
+                      <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800" alt="Moment 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
+                      </div>
+                      <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
+                        <img src="https://images.unsplash.com/photo-1516589174184-c685266e4871?auto=format&fit=crop&q=80&w=2000" alt="Moment 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
+                      </div>
+                      <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=800" alt="Moment 3" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
+                      </div>
+                      <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg translate-y-8">
+                        <img src="https://images.unsplash.com/photo-1516970739312-08b075784b71?auto=format&fit=crop&q=80&w=800" alt="Moment 4" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800'; }} />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex justify-center pt-12">
+                  <button 
+                    onClick={() => navigate('/galeria')}
+                    className="px-8 py-3 rounded-full border border-purple-300 text-purple-300 text-[10px] uppercase tracking-[0.3em] hover:bg-purple-300 hover:text-black transition-all duration-300"
+                  >
+                    Ver Tudo
+                  </button>
+                </div>
+              </motion.section>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <footer className="text-center pt-32 border-t border-purple-300/10">
           <div className="flex justify-center gap-8 mb-10">
             <button 
-              onClick={() => document.getElementById('trilha-sonora')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => { setActiveTab('trilha-sonora'); document.getElementById('conteudo-principal')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="hover:scale-110 transition-transform"
               title="Ir para Trilha Sonora"
             >
-              <Music className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+              <Music className={`w-6 h-6 transition-colors ${activeTab === 'trilha-sonora' ? 'text-purple-300' : 'text-purple-300/40 hover:text-purple-300'}`} />
             </button>
             <button 
-              onClick={() => document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => { setActiveTab('galeria'); document.getElementById('conteudo-principal')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="hover:scale-110 transition-transform"
               title="Ir para Galeria"
             >
-              <Camera className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+              <Camera className={`w-6 h-6 transition-colors ${activeTab === 'galeria' ? 'text-purple-300' : 'text-purple-300/40 hover:text-purple-300'}`} />
             </button>
             <button 
-              onClick={() => document.getElementById('mensagem')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => { setActiveTab('mensagem'); document.getElementById('conteudo-principal')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="hover:scale-110 transition-transform"
               title="Ir para Mensagem"
             >
-              <Heart className="w-6 h-6 text-brand-gold/40 hover:text-brand-gold transition-colors" />
+              <Heart className={`w-6 h-6 transition-colors ${activeTab === 'mensagem' ? 'text-purple-300' : 'text-purple-300/40 hover:text-purple-300'}`} />
             </button>
           </div>
-          <h2 className="serif text-4xl text-brand-gold mb-4">Parabéns, Sarah!</h2>
+          <h2 className="serif text-4xl text-purple-300 mb-4">Parabéns, Sarah!</h2>
           <p className="text-[11px] uppercase tracking-[0.3em] text-gray-400 mt-6 max-w-xs mx-auto leading-loose">
             Que este novo ciclo seja repleto de luz, amor e muitas alegrias. Você merece o mundo!
           </p>
           <div className="mt-12 pb-8 flex justify-center">
             <button 
               onClick={() => navigate('/admin')}
-              className="text-gray-600 hover:text-brand-gold transition-all duration-300 p-3 rounded-full hover:bg-brand-gold/10"
+              className="text-gray-600 hover:text-purple-300 transition-all duration-300 p-3 rounded-full hover:bg-purple-300/10"
               title="Painel de Administração"
             >
               <Settings className="w-4 h-4 opacity-50 hover:opacity-100 transition-opacity" />
