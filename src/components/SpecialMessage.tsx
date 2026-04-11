@@ -11,12 +11,12 @@ export default function SpecialMessage() {
     >
       <Quote className="absolute top-8 left-8 w-12 h-12 text-brand-gold/20" />
       <div className="relative z-10 max-w-2xl mx-auto text-center space-y-8">
-        <h2 className="serif text-4xl md:text-5xl italic">Parabéns, Meu Amor!</h2>
+        <h2 className="serif text-4xl md:text-5xl italic">Parabéns, Sarah!</h2>
         <p className="serif text-2xl md:text-3xl leading-relaxed font-light">
-          "Feliz aniversário, amor! 🥰 Sou muito grato e feliz por ter uma mulher incrível ao meu lado. Que seu dia seja maravilhoso e cheio de coisas boas te amo muito minha linda! ✨🎈"
+          "Feliz aniversário! 🥰 Que o seu dia seja maravilhoso e muito especial. Que este novo ciclo seja repleto de luz, amor e muitas alegrias. Você merece o mundo! ✨🎈"
         </p>
         <div className="pt-6">
-          <span className="text-[14px] uppercase tracking-[0.5em] text-brand-gold">Com todo o meu amor e carinho</span>
+          <span className="text-[14px] uppercase tracking-[0.5em] text-brand-gold">Com muito carinho</span>
         </div>
       </div>
       <Quote className="absolute bottom-8 right-8 w-12 h-12 text-brand-gold/20 rotate-180" />

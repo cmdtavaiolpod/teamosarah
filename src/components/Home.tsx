@@ -339,9 +339,9 @@ export default function Home() {
               <Heart className={`w-6 h-6 transition-colors ${activeTab === 'mensagem' ? 'text-purple-300' : 'text-purple-300/40 hover:text-purple-300'}`} />
             </button>
           </div>
-          <h2 className="serif text-4xl text-purple-300 mb-4">Parabéns, Sarah!</h2>
+          <h2 className="serif text-4xl text-purple-300 mb-4">Feliz Aniversário!</h2>
           <p className="text-[11px] uppercase tracking-[0.3em] text-gray-400 mt-6 max-w-xs mx-auto leading-loose">
-            Que este novo ciclo seja repleto de luz, amor e muitas alegrias. Você merece o mundo!
+            Aproveite cada segundo do seu dia especial.
           </p>
           <div className="mt-12 pb-8 flex justify-center">
             <button 
